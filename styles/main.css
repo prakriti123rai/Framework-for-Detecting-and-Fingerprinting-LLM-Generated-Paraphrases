@@ -1,0 +1,259 @@
+/* Nebula Intelligence Theme */
+@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap');
+
+:root {
+    --bg-deep: #050508;
+    --bg-panel: rgba(20, 20, 30, 0.6);
+    --primary-cyan: #00f2ff;
+    --primary-purple: #bc13fe;
+    --text-main: #ffffff;
+    --text-muted: #8b9bb4;
+    --glass-border: 1px solid rgba(255, 255, 255, 0.08);
+    --neon-glow: 0 0 10px rgba(0, 242, 255, 0.3), 0 0 20px rgba(188, 19, 254, 0.2);
+    --card-hover-glow: 0 0 25px rgba(0, 242, 255, 0.15);
+}
+
+/* Reset & Base */
+html {
+    background-color: #050508;
+    /* Fallback black background */
+}
+
+body {
+    background-color: transparent !important;
+    color: var(--text-main);
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+}
+
+.stApp {
+    background: transparent !important;
+}
+
+/* Reduce Main Container Padding */
+.main .block-container {
+    padding-top: 1rem !important;
+    padding-bottom: 1rem !important;
+    max-width: 90% !important;
+}
+
+/* GLOBAL BACKGROUND IFRAME HACK */
+iframe[title="streamlit_components.v1.html.html_component"] {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: -1;
+    pointer-events: none;
+    /* Allow clicks to pass through */
+}
+
+/* Hide Streamlit Elements */
+header[data-testid="stHeader"] {
+    display: block;
+}
+
+.stDeployButton {
+    display: block;
+}
+
+#MainMenu {
+    display: none;
+}
+
+footer {
+    display: none;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bg-deep);
+}
+
+::-webkit-scrollbar-thumb {
+    background: #333;
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-cyan);
+}
+
+/* Typography */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Outfit', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    background: linear-gradient(135deg, #fff 0%, var(--primary-cyan) 50%, var(--primary-purple) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 30px rgba(0, 242, 255, 0.3);
+}
+
+/* Navbar */
+.navbar-container {
+    display: flex;
+    justify-content: center;
+    padding: 0.5rem 0;
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    /* Removed background to be more transparent over stars */
+    background: linear-gradient(180deg, rgba(5, 5, 8, 0.8) 0%, rgba(5, 5, 8, 0) 100%);
+    backdrop-filter: blur(5px);
+}
+
+.nav-pill {
+    background: rgba(255, 255, 255, 0.03);
+    border: var(--glass-border);
+    padding: 0.5rem 2rem;
+    border-radius: 100px;
+    display: flex;
+    gap: 2rem;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+}
+
+/* Buttons (Streamlit Overrides) */
+.stButton>button {
+    background: rgba(0, 0, 0, 0.4);
+    /* Darker bg for contrast */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-muted);
+    border-radius: 8px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-family: 'Outfit', sans-serif;
+    font-weight: 600;
+}
+
+.stButton>button:hover {
+    border-color: var(--primary-cyan);
+    color: var(--primary-cyan);
+    box-shadow: var(--neon-glow);
+    transform: translateY(-2px);
+}
+
+.stButton>button:active {
+    transform: scale(0.98);
+}
+
+/* Primary Action Button */
+button[kind="primary"] {
+    background: linear-gradient(90deg, var(--primary-cyan), var(--primary-purple)) !important;
+    border: none !important;
+    color: #fff !important;
+    box-shadow: 0 0 20px rgba(0, 242, 255, 0.4);
+}
+
+button[kind="primary"]:hover {
+    box-shadow: 0 0 40px rgba(0, 242, 255, 0.6);
+}
+
+/* Cards & Panels */
+.glass-panel {
+    background: var(--bg-panel);
+    border: var(--glass-border);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(12px);
+    transition: all 0.4s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.glass-panel::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+}
+
+.glass-panel:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: var(--card-hover-glow);
+}
+
+/* Inputs */
+.stTextArea textarea {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+}
+
+.stTextArea textarea:focus {
+    border-color: var(--primary-purple);
+    box-shadow: 0 0 15px rgba(188, 19, 254, 0.2);
+}
+
+/* Animations */
+@keyframes float {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.animate-float {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+    0% {
+        box-shadow: 0 0 0 0 rgba(0, 242, 255, 0.4);
+    }
+
+    70% {
+        box-shadow: 0 0 0 10px rgba(0, 242, 255, 0);
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 rgba(0, 242, 255, 0);
+    }
+}
+
+.pulse {
+    animation: pulse-glow 2s infinite;
+}
+
+/* Metric Value Styling */
+.metric-value {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(180deg, #fff, #aaa);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.metric-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+}
