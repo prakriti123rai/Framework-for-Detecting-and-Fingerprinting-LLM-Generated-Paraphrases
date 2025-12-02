@@ -33,7 +33,7 @@ def app():
     <div style="font-size: 3rem; margin-bottom: 1rem;">🧬</div>
     <h3 style="color: #00f2ff;">Fingerprint Explorer</h3>
     <p style="color: #8b9bb4; line-height: 1.6;">
-        Identify the unique stylistic signatures of specific LLM architectures (GPT-4, Claude, Llama) with high-precision heatmap analysis.
+        Identify the unique stylistic signatures of specific LLM architectures (Gemini, Pegasis, Llama) with high-precision heatmap analysis.
     </p>
 </div>
 """, unsafe_allow_html=True)

@@ -57,7 +57,7 @@ def generate_pdf(prediction_label, confidence, semantic_shift_pct, pattern_match
         )
     else:
         rationale = (
-            "Patterns exhibit high similarity to GPT-4-like generation signatures. "
+            "Patterns exhibit high similarity to Gemini-like generation signatures. "
             "Semantic drift is above human thresholds, and fingerprint blocks match known LLM clusters."
         )
 
@@ -147,7 +147,7 @@ def app():
                     f'<div class="glass-panel" style="text-align: center;">'
                     f'<div class="metric-label">Prediction</div>'
                     f'<div class="metric-value" style="color: #bc13fe;">{prediction_label}</div>'
-                    f'<div style="color: #00f2ff;">{"GPT-4 Turbo" if not is_human_case else "Human Author"}</div>'
+                    f'<div style="color: #00f2ff;">{"Gemini" if not is_human_case else "Human Author"}</div>'
                     f'</div>', unsafe_allow_html=True)
             with m2:
                 st.markdown(
@@ -209,16 +209,16 @@ def app():
             # ----- Model Likelihood -----
             with f2:
                 if is_human_case:
-                    models = ['Human', 'GPT-4', 'Claude 3', 'Llama 2', 'Mistral']
+                    models = ['Human', 'Gemini', 'Pegasis', 'Llama','LLM-T5']
                     scores = [1.0, 0.0, 0.0, 0.0, 0.0]
                 else:
                     gpt_score = 0.6 + 0.2 * rng.random()
-                    claude = 0.15 + 0.1 * rng.random()
+                    Pegasis = 0.15 + 0.1 * rng.random()
                     llama = 0.08 + 0.05 * rng.random()
                     mistral = 0.04 + 0.03 * rng.random()
-                    total = gpt_score + claude + llama + mistral
-                    scores = [0.0, gpt_score/total, claude/total, llama/total, mistral/total]
-                    models = ['Human', 'GPT-4', 'Claude 3', 'Llama 2', 'Mistral']
+                    total = gpt_score + Pegasis + llama + mistral
+                    scores = [0.0, gpt_score/total, Pegasis/total, llama/total, mistral/total]
+                    models = ['Human', 'Gemini', 'Pegasis', 'Llama', 'LLM-T5']
 
                 fig_bar = px.bar(x=models, y=scores, title="Model Likelihood")
                 fig_bar.update_layout(paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', font_color='#8b9bb4')
@@ -298,42 +298,6 @@ def app():
             st.markdown("Statistical improbability, rhythm, token transitions, and feature contributions.")
 
             # -----------------------------
-            # POS-based token categorization
-            # -----------------------------
-            import spacy
-            nlp = spacy.load("en_core_web_sm")
-
-            def token_category(token):
-                doc = nlp(token)
-                if not doc or not doc[0]:
-                    return "other"
-                pos = doc[0].pos_
-                mapping = {
-                    "NOUN": "noun",
-                    "PROPN": "noun",
-                    "VERB": "verb",
-                    "AUX": "verb",
-                    "ADJ": "adjective",
-                    "ADV": "adverb",
-                    "DET": "determiner",
-                    "ADP": "preposition",
-                    "CCONJ": "conjunction",
-                    "SCONJ": "conjunction",
-                    "PUNCT": "punctuation"
-                }
-                return mapping.get(pos, "other")
-
-            # Extract POS categories for both texts
-            tokens_orig = [t for t in original.split() if t.strip()]
-            tokens_susp = [t for t in suspect.split() if t.strip()]
-
-            pos_orig = [token_category(t) for t in tokens_orig]
-            pos_susp = [token_category(t) for t in tokens_susp]
-
-            combined_pos = pos_orig + pos_susp   # no separator — smooth flow
-
-
-            # -----------------------------
             # TOP BLOCK: RARITY + RADAR
             # -----------------------------
             top_left, top_right = st.columns([1.1, 0.9], vertical_alignment="top", gap="large")
@@ -408,12 +372,19 @@ def app():
                 st.caption("Perplexity flow captures rhythmic fluctuations arising in model-generated text; human writing tends to show flatter profiles.")
 
 
-            # ---- TOKEN TRANSITION GRAPH (POS-based) ----
+            # ---- TOKEN TRANSITION GRAPH (length-category based) ----
             with mid_right:
+                # Build simple transitions based on token length categories
+                tokens_orig = [t for t in original.replace('\n',' ').split(' ') if t]
+                tokens_susp = [t for t in suspect.replace('\n',' ').split(' ') if t]
+                seq = tokens_orig + ['||'] + tokens_susp  # separator to avoid cross-pollination
+                cats = [token_category(t) for t in seq]
 
-                # Build weighted transitions
+                # Build weighted transitions between categories
                 edges = {}
-                for a, b in zip(combined_pos[:-1], combined_pos[1:]):
+                for a, b in zip(cats[:-1], cats[1:]):
+                    if a == '||' or b == '||':
+                        continue
                     edges[(a, b)] = edges.get((a, b), 0) + 1
 
                 G = nx.DiGraph()
